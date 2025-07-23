@@ -1,0 +1,3 @@
+aiogram==3.11
+fluent.runtime==0.4
+Babel==2.15
