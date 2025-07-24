@@ -1,5 +1,11 @@
-from app.handlers import admin, payments
-from app.middlewares.i18n_middleware import I18nMiddleware
-dp.update.middleware(DbSessionMiddleware())
-dp.update.middleware(I18nMiddleware())
-dp.include_routers(start.router, echo.router, admin.router, payments.router)
+# вначале файла
+import os
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+async def on_startup(bot: Bot):
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    # 1) Railway проставит переменную RAILWAY_STATIC_URL
+    base = os.getenv("RAILWAY_STATIC_URL", f"localhost:{os.getenv('PORT', 8080)}")
+    webhook_url = f"https://{base}/{BOT_TOKEN}"
+    await bot.set_webhook(webhook_url)
